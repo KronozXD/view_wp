@@ -2,12 +2,12 @@ import sys
 import os
 import subprocess
 
-from PySide6.QtWidgets import (
+from PySide6.QtWidgets import ( # type: ignore
     QApplication, QMainWindow, QWidget, QVBoxLayout,
     QHBoxLayout, QPushButton, QLabel, QFrame, QGraphicsDropShadowEffect
 )
-from PySide6.QtCore import Qt, QRect, QPropertyAnimation, QEasingCurve, QTimer, QSize
-from PySide6.QtGui import QIcon, QPixmap, QColor
+from PySide6.QtCore import Qt, QRect, QPropertyAnimation, QEasingCurve, QTimer, QSize # type: ignore
+from PySide6.QtGui import QIcon, QPixmap, QColor # type: ignore
 
 # --- Colores tecnológicos ---
 NEON_GREEN = "#39FF14"        # Verde neón
@@ -19,7 +19,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         
         # Título y dimensiones de la ventana principal
-        self.setWindowTitle("Interfaz Principal - Estilo Tecnológico")
+        self.setWindowTitle("WPAnalyzer - Análisis de Base de Datos de WhatsApp v. 1.0")
         self.setGeometry(200, 100, 1000, 700)
 
         # Contenedor principal
@@ -34,43 +34,28 @@ class MainWindow(QMainWindow):
         self.main_frame = QFrame()
         self.main_layout = QVBoxLayout(self.main_frame)
 
-        # Imagen / Logo principal (ajusta la ruta según tu proyecto)
+        # Imagen / Logo principal
         self.logo_label = QLabel()
         self.logo_label.setAlignment(Qt.AlignCenter)
         pixmap = QPixmap("icons/logo_neon.png")
-        # Escalado de ejemplo para el logo principal (opcional)
         pixmap = pixmap.scaled(250, 250, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.logo_label.setPixmap(pixmap)
         self.main_layout.addWidget(self.logo_label)
 
         # Botones para abrir otros scripts
-        # Ajusta las rutas de íconos y scripts a tu estructura
-        self.btn_modulo1 = self.create_button(
-            "Ver Mensajes", 
-            "icons/icon_modulo1.png", 
-            lambda: self.open_script("app11.py")
-        )
-        self.btn_modulo2 = self.create_button(
-            "Extracto de Llamadas", 
-            "icons/icon_modulo2.png", 
-            lambda: self.open_script("call7.py")
-        )
-        self.btn_modulo3 = self.create_button(
-            "Geolocalización", 
-            "icons/icon_modulo3.png", 
-            lambda: self.open_script("loc4.py")
-        )
+        self.btn_modulo1 = self.create_button("Ver Mensajes", "icons/icon_modulo1.png", lambda: self.open_script("app11.py"))
+        self.btn_modulo2 = self.create_button("Extracto de Llamadas", "icons/icon_modulo2.png", lambda: self.open_script("call7.py"))
+        self.btn_modulo3 = self.create_button("Geolocalización", "icons/icon_modulo3.png", lambda: self.open_script("loc4.py"))
 
         self.main_layout.addWidget(self.btn_modulo1)
         self.main_layout.addWidget(self.btn_modulo2)
         self.main_layout.addWidget(self.btn_modulo3)
         self.main_layout.addStretch()
 
-        # Agregamos el frame central al layout principal
         main_layout.addWidget(self.main_frame, 1)
         self.setCentralWidget(central_widget)
 
-        # Botón flotante con animaciones (verde neón)
+        # Botón flotante con animaciones
         self.floating_button = self.create_floating_button()
         self.init_periodic_animation()
 
@@ -93,29 +78,29 @@ class MainWindow(QMainWindow):
 
         layout.addStretch()
 
-        # Texto de contacto en la parte inferior izquierda
-        self.contact_label = QLabel("Derechos: Kevin Massi ver. 1.0")
-        self.contact_label.setStyleSheet(f"color: {NEON_GREEN}; font-size: 12px;")
+        # Texto de contacto con enlace
+        self.contact_label = QLabel('<a href="https://api.whatsapp.com/send?phone=59169746546&text=Saludos%2C%20te%20escribo%20para%20una%20consulta%20de%20WPAnalyzer" style="color: #39FF14; text-decoration: none;">Derechos: Kr0n0z ver. 1.0</a>')
+        self.contact_label.setTextFormat(Qt.RichText)  # Permite HTML
+        self.contact_label.setOpenExternalLinks(True)  # Hace que los enlaces se abran en el navegador
+        self.contact_label.setStyleSheet("font-size: 12px;")
+
         layout.addWidget(self.contact_label, alignment=Qt.AlignLeft)
 
         return frame
 
     def create_button(self, text, icon_path, callback):
         """
-        Crea un botón con un ícono (máx. 500x500 px), texto y una función (callback).
+        Crea un botón con un ícono y una función (callback).
         """
         button = QPushButton(text)
         
-        # Escalar el icono a un máximo de 500x500 (KeepAspectRatio)
         pixmap = QPixmap(icon_path)
         if not pixmap.isNull():
             pixmap = pixmap.scaled(500, 500, Qt.KeepAspectRatio, Qt.SmoothTransformation)
             icon = QIcon(pixmap)
             button.setIcon(icon)
-            # Ajustar el tamaño que se mostrará en el botón
             button.setIconSize(QSize(64, 64))
         else:
-            # Si el ícono no existe o está vacío, no asignamos nada
             print(f"[ADVERTENCIA] No se encontró el ícono: {icon_path}")
         
         button.clicked.connect(callback)
@@ -123,10 +108,10 @@ class MainWindow(QMainWindow):
 
     def create_floating_button(self):
         """
-        Crea un botón flotante con animaciones (fade-in y desplazamiento).
+        Crea un botón flotante con animaciones.
         """
         button = QPushButton()
-        button.setIcon(QIcon("icons/logo_neon.png"))  # Ajusta si deseas otro icono
+        button.setIcon(QIcon("icons/logo_neon.png"))
         button.setIconSize(QSize(64, 64))
         button.setStyleSheet("border: none; background: transparent;")
         button.setParent(self)
@@ -136,10 +121,10 @@ class MainWindow(QMainWindow):
         shadow = QGraphicsDropShadowEffect()
         shadow.setBlurRadius(25)
         shadow.setOffset(0, 0)
-        shadow.setColor(QColor(57, 255, 20, 180))  # Verde neón con algo de transparencia
+        shadow.setColor(QColor(57, 255, 20, 180))
         button.setGraphicsEffect(shadow)
 
-        # Animación de opacidad (fade-in)
+        # Animación de opacidad
         anim_opacity = QPropertyAnimation(button, b"windowOpacity")
         anim_opacity.setDuration(1500)
         anim_opacity.setStartValue(0.0)
@@ -147,7 +132,7 @@ class MainWindow(QMainWindow):
         anim_opacity.setEasingCurve(QEasingCurve.InOutQuad)
         anim_opacity.start()
 
-        # Animación de posición (slide)
+        # Animación de posición
         anim_geometry = QPropertyAnimation(button, b"geometry")
         anim_geometry.setDuration(1500)
         anim_geometry.setStartValue(QRect(-100, 20, 64, 64))
@@ -159,7 +144,7 @@ class MainWindow(QMainWindow):
 
     def init_periodic_animation(self):
         """
-        Animación periódica para el botón flotante (efecto de flotación).
+        Animación periódica para el botón flotante.
         """
         self.timer = QTimer()
         self.timer.setInterval(4000)
@@ -171,12 +156,7 @@ class MainWindow(QMainWindow):
         Hace que el botón flotante suba y baje ligeramente.
         """
         current_geom = self.floating_button.geometry()
-        up_geom = QRect(
-            current_geom.x(), 
-            current_geom.y() - 10, 
-            current_geom.width(), 
-            current_geom.height()
-        )
+        up_geom = QRect(current_geom.x(), current_geom.y() - 10, current_geom.width(), current_geom.height())
 
         anim = QPropertyAnimation(self.floating_button, b"geometry")
         anim.setDuration(600)
@@ -199,7 +179,7 @@ class MainWindow(QMainWindow):
 
     def apply_style(self):
         """
-        Aplica el estilo general (negro + verde neón).
+        Aplica el estilo general.
         """
         style_sheet = f"""
         QMainWindow {{
